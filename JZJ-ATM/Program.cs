@@ -1,8 +1,12 @@
 ﻿using JZJ_ATM.Data;
+using JZJ_ATM.Helpers;
 using JZJ_ATM.Models;
 using JZJ_ATM.Services;
 using JZJ_ATM.UI;
 
+// UTF-8 - ქართული სიმბოლოებისთვის
+Console.OutputEncoding = System.Text.Encoding.UTF8;
+Console.InputEncoding = System.Text.Encoding.UTF8;
 
 // სერვისების ინიციალიზაცია
 var repo = new FileRepository();
@@ -22,16 +26,15 @@ if (users.Count == 0)
     repo.SaveUsers(users);
 }
 
-// მთავარი ციკლი - შესვლა და მენიუს გამოტანა
+// მთავარი ციკლი
 while (true)
 {
     var user = new MainMenu(auth).Run();
-    if (user == null) break; // გასვლა
+    if (user == null) break;
 
-    // როლის მიხედვით სხვადასხვა მენიუ
     if (user.Role == Role.Admin) new AdminMenu(user, adminSvc, loanSvc, bank).Run();
     else new ClientMenu(user, bank, repo, loanSvc).Run();
 }
 
 Console.Clear();
-Console.WriteLine("\n  Thank you for using JZJ ATM. Goodbye!\n");
+Console.WriteLine($"\n  {Lang.Get("Goodbye")}\n");

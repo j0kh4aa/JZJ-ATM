@@ -12,17 +12,17 @@ public class ClientMenu(User user, BankingService bank, FileRepository repo, Loa
     {
         while (true)
         {
-            Display.Header($"Client: {user.Username}");
-            Console.WriteLine("  [1] Check Balance");
-            Console.WriteLine("  [2] Deposit");
-            Console.WriteLine("  [3] Withdraw");
-            Console.WriteLine("  [4] Transaction History");
-            Console.WriteLine("  [5] Request a Loan");
-            Console.WriteLine("  [6] My Loan Requests");
-            Console.WriteLine("  [0] Logout");
+            Display.Header($"{(Lang.Current == "Georgian" ? "კლიენტი" : "Client")}: {user.Username}");
+            Console.WriteLine($"  [1] {Lang.Get("Balance")}");
+            Console.WriteLine($"  [2] {Lang.Get("Deposit")}");
+            Console.WriteLine($"  [3] {Lang.Get("Withdraw")}");
+            Console.WriteLine($"  [4] {Lang.Get("History")}");
+            Console.WriteLine($"  [5] {Lang.Get("RequestLoan")}");
+            Console.WriteLine($"  [6] {Lang.Get("MyLoans")}");
+            Console.WriteLine($"  [0] {Lang.Get("Logout")}");
             Display.Line();
 
-            switch (Display.Prompt("Choice"))
+            switch (Display.Prompt(Lang.Get("Choice")))
             {
                 case "1": ShowBalance(); break;
                 case "2": DoDeposit(); break;
@@ -31,7 +31,7 @@ public class ClientMenu(User user, BankingService bank, FileRepository repo, Loa
                 case "5": RequestLoan(); break;
                 case "6": ShowLoans(); break;
                 case "0": return;
-                default: Display.Error("Invalid choice."); Display.Pause(); break;
+                default: Display.Error(Lang.Get("InvalidChoice")); Display.Pause(); break;
             }
         }
     }
@@ -39,68 +39,67 @@ public class ClientMenu(User user, BankingService bank, FileRepository repo, Loa
     // ბალანსის ნახვა
     private void ShowBalance()
     {
-        Display.Header("Balance");
+        Display.Header(Lang.Get("Balance"));
         Display.Info($"Balance: {bank.GetBalance(user.Username):F2} GEL");
         Display.Pause();
     }
 
-    // თანხის შეტანა ანგარიშზე
+    // თანხის შეტანა
     private void DoDeposit()
     {
-        Display.Header("Deposit");
-        var input = Display.Prompt("Amount (GEL)");
-        if (!Validator.TryParseAmount(input, out decimal amount)) { Display.Error("Invalid amount."); Display.Pause(); return; }
+        Display.Header(Lang.Get("Deposit"));
+        var input = Display.Prompt(Lang.Get("Amount"));
+        if (!Validator.TryParseAmount(input, out decimal amount)) { Display.Error(Lang.Get("InvalidAmount")); Display.Pause(); return; }
         bank.Deposit(user, amount);
-        Display.Success($"Deposited {amount:F2} GEL. Balance: {user.Balance:F2} GEL");
+        Display.Success($"{Lang.Get("Deposit")}: {amount:F2} GEL | Balance: {user.Balance:F2} GEL");
         Display.Pause();
     }
 
-    // თანხის გატანა ანგარიშიდან
+    // თანხის გატანა
     private void DoWithdraw()
     {
-        Display.Header("Withdraw");
-        var input = Display.Prompt("Amount (GEL)");
-        if (!Validator.TryParseAmount(input, out decimal amount)) { Display.Error("Invalid amount."); Display.Pause(); return; }
+        Display.Header(Lang.Get("Withdraw"));
+        var input = Display.Prompt(Lang.Get("Amount"));
+        if (!Validator.TryParseAmount(input, out decimal amount)) { Display.Error(Lang.Get("InvalidAmount")); Display.Pause(); return; }
         if (bank.Withdraw(user, amount))
-            Display.Success($"Withdrawn {amount:F2} GEL. Balance: {user.Balance:F2} GEL");
+            Display.Success($"{Lang.Get("Withdraw")}: {amount:F2} GEL | Balance: {user.Balance:F2} GEL");
         else
-            Display.Error("Insufficient funds.");
+            Display.Error(Lang.Get("InsufficientFunds"));
         Display.Pause();
     }
 
-    // ტრანზაქციების ისტორიის ნახვა
+    // ტრანზაქციების ისტორია
     private void ShowHistory()
     {
-        Display.Header("History");
+        Display.Header(Lang.Get("History"));
         var lines = repo.GetUserTransactions(user.Username);
-        if (lines.Length == 0) Display.Info("No transactions yet.");
+        if (lines.Length == 0) Display.Info(Lang.Get("NoTransactions"));
         else foreach (var l in lines) Console.WriteLine($"  {l}");
         Display.Pause();
     }
 
-    // სესხის მოთხოვნის გაგზავნა
+    // სესხის მოთხოვნა
     private void RequestLoan()
     {
-        Display.Header("Request a Loan");
-        var input = Display.Prompt("Loan amount (GEL)");
-        if (!Validator.TryParseAmount(input, out decimal amount)) { Display.Error("Invalid amount."); Display.Pause(); return; }
+        Display.Header(Lang.Get("RequestLoan"));
+        var input = Display.Prompt(Lang.Get("LoanAmount"));
+        if (!Validator.TryParseAmount(input, out decimal amount)) { Display.Error(Lang.Get("InvalidAmount")); Display.Pause(); return; }
         if (loans.RequestLoan(user.Username, amount))
-            Display.Success("Loan request submitted! Wait for admin approval.");
+            Display.Success(Lang.Get("LoanSubmitted"));
         else
-            Display.Error("You already have a pending loan request.");
+            Display.Error(Lang.Get("AlreadyPending"));
         Display.Pause();
     }
 
-    // კლიენტის სესხის მოთხოვნების სტატუსის ნახვა
+    // სესხის სტატუსი
     private void ShowLoans()
     {
-        Display.Header("My Loan Requests");
+        Display.Header(Lang.Get("MyLoans"));
         var myLoans = loans.GetUserLoans(user.Username);
-        if (myLoans.Length == 0) { Display.Info("No loan requests yet."); Display.Pause(); return; }
+        if (myLoans.Length == 0) { Display.Info(Lang.Get("NoLoans")); Display.Pause(); return; }
 
         foreach (var l in myLoans)
         {
-            // სტატუსის მიხედვით ფერის შეცვლა
             Console.ForegroundColor = l.Status switch
             {
                 "Approved" => ConsoleColor.Green,

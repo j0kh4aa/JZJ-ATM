@@ -11,34 +11,34 @@ public class AdminMenu(User admin, AdminService adminSvc, LoanService loanSvc, B
     {
         while (true)
         {
-            Display.Header($"Admin: {admin.Username}");
-            Console.WriteLine("  [1] Pending Registrations");
-            Console.WriteLine("  [2] Pending Loan Requests");
-            Console.WriteLine("  [0] Logout");
+            Display.Header($"{(Lang.Current == "Georgian" ? "ადმინი" : "Admin")}: {admin.Username}");
+            Console.WriteLine($"  [1] {Lang.Get("PendingReg")}");
+            Console.WriteLine($"  [2] {Lang.Get("PendingLoans")}");
+            Console.WriteLine($"  [0] {Lang.Get("Logout")}");
             Display.Line();
 
-            switch (Display.Prompt("Choice"))
+            switch (Display.Prompt(Lang.Get("Choice")))
             {
                 case "1": ManagePending(); break;
                 case "2": ManageLoans(); break;
                 case "0": return;
-                default: Display.Error("Invalid choice."); Display.Pause(); break;
+                default: Display.Error(Lang.Get("InvalidChoice")); Display.Pause(); break;
             }
         }
     }
 
-    // მომლოდინე რეგისტრაციების დამტკიცება ან უარყოფა
+    // მომლოდინე რეგისტრაციების მართვა
     private void ManagePending()
     {
         var pending = adminSvc.GetPending();
-        Display.Header("Pending Registrations");
-        if (pending.Length == 0) { Display.Info("No pending registrations."); Display.Pause(); return; }
+        Display.Header(Lang.Get("PendingReg"));
+        if (pending.Length == 0) { Display.Info(Lang.Get("NoPending")); Display.Pause(); return; }
 
         foreach (var u in pending)
         {
             Display.Line();
-            Console.WriteLine($"  User: {u.Username}");
-            switch (Display.Prompt("  [A]pprove / [R]eject / [S]kip").ToUpper())
+            Console.WriteLine($"  {Lang.Get("User")}: {u.Username}");
+            switch (Display.Prompt(Lang.Get("Approve")).ToUpper())
             {
                 case "A":
                     if (adminSvc.Approve(u.Username))
@@ -49,25 +49,25 @@ public class AdminMenu(User admin, AdminService adminSvc, LoanService loanSvc, B
                         Display.Success($"{u.Username} rejected.");
                     break;
                 default:
-                    Display.Info("Skipped.");
+                    Display.Info(Lang.Get("Skipped"));
                     break;
             }
         }
         Display.Pause();
     }
 
-    // სესხის მოთხოვნების დამტკიცება ან უარყოფა
+    // სესხის მოთხოვნების მართვა
     private void ManageLoans()
     {
         var pending = loanSvc.GetPending();
-        Display.Header("Pending Loans");
-        if (pending.Length == 0) { Display.Info("No pending loan requests."); Display.Pause(); return; }
+        Display.Header(Lang.Get("PendingLoans"));
+        if (pending.Length == 0) { Display.Info(Lang.Get("NoPendingLoans")); Display.Pause(); return; }
 
         foreach (var loan in pending)
         {
             Display.Line();
-            Console.WriteLine($"  User: {loan.Username}   Amount: {loan.Amount:F2} GEL");
-            switch (Display.Prompt("  [A]pprove / [R]eject / [S]kip").ToUpper())
+            Console.WriteLine($"  {Lang.Get("User")}: {loan.Username}   {Lang.Get("Amount")}: {loan.Amount:F2} GEL");
+            switch (Display.Prompt(Lang.Get("Approve")).ToUpper())
             {
                 case "A":
                     if (loanSvc.Approve(loan.Username, loan.Amount, bank, admin))
@@ -78,7 +78,7 @@ public class AdminMenu(User admin, AdminService adminSvc, LoanService loanSvc, B
                         Display.Success($"Loan rejected for {loan.Username}.");
                     break;
                 default:
-                    Display.Info("Skipped.");
+                    Display.Info(Lang.Get("Skipped"));
                     break;
             }
         }

@@ -44,7 +44,6 @@ public static class Display
             }
         }
         while (key.Key != ConsoleKey.Enter);
-
         Console.WriteLine();
         return pwd.ToString();
     }
@@ -56,6 +55,6 @@ public static class Display
         return Console.ReadLine()?.Trim() ?? "";
     }
 
-    // პაუზა - ნებისმიერი ღილაკის მოლოდინი
-    public static void Pause() { Console.Write("\n  Press any key to continue..."); Console.ReadKey(true); }
+    // პაუზა - ენის მიხედვით
+    public static void Pause() { Console.Write($"\n  {Lang.Get("PressAnyKey")}"); Console.ReadKey(true); }
 }
