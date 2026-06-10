@@ -1,9 +1,16 @@
 ﻿namespace JZJ_ATM.Data;
 
-// ფაილების გზები - ცენტრალური კონსტანტები
+/// <summary>
+/// Central constants for all file paths used in the application.
+/// </summary>
 public static class FilePaths
 {
-    public const string Users = "Data/users.txt";        // მომხმარებლების ფაილი
-    public const string Transactions = "Data/transactions.txt"; // ტრანზაქციების ფაილი
-    public const string Loans = "Data/loans.txt";        // სესხების ფაილი
+    /// <summary>Path to the users data file.</summary>
+    public const string Users = "Data/users.txt";
+
+    /// <summary>Path to the transactions log file.</summary>
+    public const string Transactions = "Data/transactions.txt";
+
+    /// <summary>Path to the loans data file.</summary>
+    public const string Loans = "Data/loans.txt";
 }

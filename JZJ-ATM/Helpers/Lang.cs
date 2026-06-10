@@ -1,15 +1,22 @@
 ﻿namespace JZJ_ATM.Helpers;
 
-// ენის მართვის კლასი - ქართული და ინგლისური
+/// <summary>
+/// Manages the current display language and provides localized text lookups.
+/// Supports English and Georgian.
+/// </summary>
 public static class Lang
 {
-    // მიმდინარე ენა
+    /// <summary>Gets the currently active language. Default is English.</summary>
     public static string Current { get; private set; } = "English";
 
-    // ენის შეცვლა
+    /// <summary>
+    /// Sets the active language for all text lookups.
+    /// </summary>
     public static void Set(string lang) => Current = lang;
 
-    // ტექსტების ლექსიკონი
+    /// <summary>
+    /// Dictionary of all UI text keys mapped to their English and Georgian translations.
+    /// </summary>
     private static readonly Dictionary<string, Dictionary<string, string>> Texts = new()
     {
         ["Welcome"] = new() { ["English"] = "Welcome", ["Georgian"] = "მოგესალმებით" },
@@ -50,7 +57,10 @@ public static class Lang
         ["User"] = new() { ["English"] = "User", ["Georgian"] = "მომხმარებელი" },
     };
 
-    // ტექსტის მიღება მიმდინარე ენაზე
+    /// <summary>
+    /// Returns the localized text for the given key in the current language.
+    /// Falls back to the key itself if no match is found.
+    /// </summary>
     public static string Get(string key) =>
         Texts.TryGetValue(key, out var t) && t.TryGetValue(Current, out var v) ? v : key;
 }
