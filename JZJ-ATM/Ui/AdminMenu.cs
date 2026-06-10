@@ -4,9 +4,14 @@ using JZJ_ATM.Services;
 
 namespace JZJ_ATM.UI;
 
-// ადმინის მენიუ - მომხმარებლებისა და სესხების მართვა
+/// <summary>
+/// Displays the admin menu and handles user registration approvals and loan management.
+/// </summary>
 public class AdminMenu(User admin, AdminService adminSvc, LoanService loanSvc, BankingService bank)
 {
+    /// <summary>
+    /// Starts the admin menu loop until the admin logs out.
+    /// </summary>
     public void Run()
     {
         while (true)
@@ -27,7 +32,9 @@ public class AdminMenu(User admin, AdminService adminSvc, LoanService loanSvc, B
         }
     }
 
-    // მომლოდინე რეგისტრაციების მართვა
+    /// <summary>
+    /// Lists all pending user registrations and allows the admin to approve, reject, or skip each one.
+    /// </summary>
     private void ManagePending()
     {
         var pending = adminSvc.GetPending();
@@ -56,7 +63,9 @@ public class AdminMenu(User admin, AdminService adminSvc, LoanService loanSvc, B
         Display.Pause();
     }
 
-    // სესხის მოთხოვნების მართვა
+    /// <summary>
+    /// Lists all pending loan requests and allows the admin to approve, reject, or skip each one.
+    /// </summary>
     private void ManageLoans()
     {
         var pending = loanSvc.GetPending();

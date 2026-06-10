@@ -3,22 +3,33 @@ using JZJ_ATM.Models;
 
 namespace JZJ_ATM.Services;
 
-// ავტენტიფიკაციის სერვისი - რეგისტრაცია და შესვლა
+/// <summary>
+/// Handles user authentication: registration and login.
+/// </summary>
 public class AuthService : AccountService
 {
+    /// <summary>
+    /// Initializes the AuthService with the given file repository.
+    /// </summary>
     public AuthService(FileRepository repo) : base(repo) { }
 
-    // ახალი მომხმარებლის რეგისტრაცია
+    /// <summary>
+    /// Registers a new user with the given credentials.
+    /// Returns false if the username is already taken.
+    /// </summary>
     public bool Register(string username, string password)
     {
         Users = Repo.LoadUsers();
-        if (Find(username) != null) return false; // მომხმარებელი უკვე არსებობს
+        if (Find(username) != null) return false;
         Users.Add(new User { Username = username, Password = password, Role = Role.Client, Approved = false });
         Save();
         return true;
     }
 
-    // მომხმარებლის შესვლა - შემოწმება და დაბრუნება
+    /// <summary>
+    /// Validates credentials and returns the matching approved user.
+    /// Returns null if credentials are wrong or the account is not yet approved.
+    /// </summary>
     public User? Login(string username, string password)
     {
         Users = Repo.LoadUsers();

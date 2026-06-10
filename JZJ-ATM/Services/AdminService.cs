@@ -3,19 +3,28 @@ using JZJ_ATM.Models;
 
 namespace JZJ_ATM.Services;
 
-// ადმინის სერვისი - მომხმარებლების დამტკიცება/უარყოფა
+/// <summary>
+/// Handles admin operations: viewing, approving, and rejecting pending user registrations.
+/// </summary>
 public class AdminService : AccountService
 {
+    /// <summary>
+    /// Initializes the AdminService with the given file repository.
+    /// </summary>
     public AdminService(FileRepository repo) : base(repo) { }
 
-    // მომლოდინე მომხმარებლების სია
+    /// <summary>
+    /// Returns all client accounts that are awaiting admin approval.
+    /// </summary>
     public User[] GetPending()
     {
         Users = Repo.LoadUsers();
         return [.. Users.Where(u => u.Role == Role.Client && !u.Approved)];
     }
 
-    // მომხმარებლის დამტკიცება
+    /// <summary>
+    /// Approves the specified user account. Returns false if not found or already approved.
+    /// </summary>
     public bool Approve(string username)
     {
         Users = Repo.LoadUsers();
@@ -26,7 +35,9 @@ public class AdminService : AccountService
         return true;
     }
 
-    // მომხმარებლის უარყოფა და წაშლა
+    /// <summary>
+    /// Rejects and removes the specified user account. Returns false if not found or already approved.
+    /// </summary>
     public bool Reject(string username)
     {
         Users = Repo.LoadUsers();

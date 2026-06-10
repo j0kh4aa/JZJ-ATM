@@ -1,4 +1,6 @@
 ﻿namespace JZJ_ATM.Models;
 
-// მომხმარებლის როლი სისტემაში
+/// <summary>
+/// Defines the role of a user within the ATM system.
+/// </summary>
 public enum Role { Client, Admin }

@@ -5,9 +5,14 @@ using JZJ_ATM.Services;
 
 namespace JZJ_ATM.UI;
 
-// კლიენტის მენიუ - საბანკო ოპერაციები
+/// <summary>
+/// Displays the client menu and handles all banking operations for a logged-in user.
+/// </summary>
 public class ClientMenu(User user, BankingService bank, FileRepository repo, LoanService loans)
 {
+    /// <summary>
+    /// Starts the client menu loop until the user logs out.
+    /// </summary>
     public void Run()
     {
         while (true)
@@ -36,7 +41,9 @@ public class ClientMenu(User user, BankingService bank, FileRepository repo, Loa
         }
     }
 
-    // ბალანსის ნახვა
+    /// <summary>
+    /// Displays the current account balance.
+    /// </summary>
     private void ShowBalance()
     {
         Display.Header(Lang.Get("Balance"));
@@ -44,7 +51,9 @@ public class ClientMenu(User user, BankingService bank, FileRepository repo, Loa
         Display.Pause();
     }
 
-    // თანხის შეტანა
+    /// <summary>
+    /// Prompts the user for an amount and performs a deposit.
+    /// </summary>
     private void DoDeposit()
     {
         Display.Header(Lang.Get("Deposit"));
@@ -55,7 +64,9 @@ public class ClientMenu(User user, BankingService bank, FileRepository repo, Loa
         Display.Pause();
     }
 
-    // თანხის გატანა
+    /// <summary>
+    /// Prompts the user for an amount and performs a withdrawal if funds are sufficient.
+    /// </summary>
     private void DoWithdraw()
     {
         Display.Header(Lang.Get("Withdraw"));
@@ -68,7 +79,9 @@ public class ClientMenu(User user, BankingService bank, FileRepository repo, Loa
         Display.Pause();
     }
 
-    // ტრანზაქციების ისტორია
+    /// <summary>
+    /// Displays the full transaction history for the current user.
+    /// </summary>
     private void ShowHistory()
     {
         Display.Header(Lang.Get("History"));
@@ -78,7 +91,9 @@ public class ClientMenu(User user, BankingService bank, FileRepository repo, Loa
         Display.Pause();
     }
 
-    // სესხის მოთხოვნა
+    /// <summary>
+    /// Prompts the user for a loan amount and submits a loan request.
+    /// </summary>
     private void RequestLoan()
     {
         Display.Header(Lang.Get("RequestLoan"));
@@ -91,7 +106,9 @@ public class ClientMenu(User user, BankingService bank, FileRepository repo, Loa
         Display.Pause();
     }
 
-    // სესხის სტატუსი
+    /// <summary>
+    /// Displays all loan requests for the current user with color-coded statuses.
+    /// </summary>
     private void ShowLoans()
     {
         Display.Header(Lang.Get("MyLoans"));

@@ -4,12 +4,16 @@ using JZJ_ATM.Services;
 
 namespace JZJ_ATM.UI;
 
-// მთავარი მენიუ - ენის არჩევა, შესვლა, რეგისტრაცია
+/// <summary>
+/// Displays the main entry menu: language selection, login, and registration.
+/// </summary>
 public class MainMenu(AuthService auth)
 {
+    /// <summary>
+    /// Runs the main menu loop. Returns the logged-in User or null if the user exits.
+    /// </summary>
     public User? Run()
     {
-        // პირველი გაშვებისას ენის არჩევა
         SelectLanguage();
 
         while (true)
@@ -24,12 +28,9 @@ public class MainMenu(AuthService auth)
             switch (Display.Prompt(Lang.Get("Choice")).ToUpper())
             {
                 case "1":
-                    {
-                        // შესვლის მცდელობა
-                        var u = DoLogin();
-                        if (u != null) return u;
-                        break;
-                    }
+                    var u = DoLogin();
+                    if (u != null) return u;
+                    break;
                 case "2":
                     DoRegister();
                     break;
@@ -46,7 +47,9 @@ public class MainMenu(AuthService auth)
         }
     }
 
-    // ენის არჩევის ეკრანი
+    /// <summary>
+    /// Displays a language selection screen and sets the active language.
+    /// </summary>
     private static void SelectLanguage()
     {
         Display.Header("Language / ენა");
@@ -57,7 +60,10 @@ public class MainMenu(AuthService auth)
         Lang.Set(choice == "2" ? "Georgian" : "English");
     }
 
-    // შესვლის პროცესი
+    /// <summary>
+    /// Prompts for credentials and attempts to log the user in.
+    /// Returns the User object on success, or null on failure.
+    /// </summary>
     private User? DoLogin()
     {
         Display.Header(Lang.Get("Login"));
@@ -65,15 +71,13 @@ public class MainMenu(AuthService auth)
         Console.Write($"  {Lang.Get("Password")}: ");
         var password = Display.ReadPassword();
         var user = auth.Login(username, password);
-        if (user == null)
-        {
-            Display.Error(Lang.Get("WrongCredentials"));
-            Display.Pause();
-        }
+        if (user == null) { Display.Error(Lang.Get("WrongCredentials")); Display.Pause(); }
         return user;
     }
 
-    // რეგისტრაციის პროცესი
+    /// <summary>
+    /// Prompts for credentials and registers a new user account pending admin approval.
+    /// </summary>
     private void DoRegister()
     {
         Display.Header(Lang.Get("Register"));

@@ -3,12 +3,19 @@ using JZJ_ATM.Models;
 
 namespace JZJ_ATM.Services;
 
-// საბანკო ოპერაციების სერვისი
+/// <summary>
+/// Handles core banking operations: deposit, withdrawal, and balance inquiry.
+/// </summary>
 public class BankingService : AccountService
 {
+    /// <summary>
+    /// Initializes the BankingService with the given file repository.
+    /// </summary>
     public BankingService(FileRepository repo) : base(repo) { }
 
-    // თანხის შეტანა ანგარიშზე
+    /// <summary>
+    /// Deposits the specified amount into the user's account and logs the transaction.
+    /// </summary>
     public void Deposit(User user, decimal amount)
     {
         Users = Repo.LoadUsers();
@@ -19,7 +26,10 @@ public class BankingService : AccountService
         Repo.LogTransaction(new Transaction { Username = user.Username, Type = "Deposit", Amount = amount });
     }
 
-    // თანხის გატანა ანგარიშიდან - false თუ არ არის საკმარისი თანხა
+    /// <summary>
+    /// Withdraws the specified amount from the user's account.
+    /// Returns false if the balance is insufficient.
+    /// </summary>
     public bool Withdraw(User user, decimal amount)
     {
         Users = Repo.LoadUsers();
@@ -32,7 +42,9 @@ public class BankingService : AccountService
         return true;
     }
 
-    // მიმდინარე ბალანსის წაკითხვა ფაილიდან
+    /// <summary>
+    /// Reads and returns the current balance for the specified user from file.
+    /// </summary>
     public decimal GetBalance(string username)
     {
         Users = Repo.LoadUsers();

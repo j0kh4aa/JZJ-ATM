@@ -3,14 +3,22 @@ using JZJ_ATM.Models;
 
 namespace JZJ_ATM.Services;
 
-// სესხის სერვისი - მოთხოვნა, დამტკიცება, უარყოფა
+/// <summary>
+/// Manages loan requests: submission, approval, and rejection.
+/// </summary>
 public class LoanService
 {
     private readonly FileRepository _repo;
 
+    /// <summary>
+    /// Initializes the LoanService with the given file repository.
+    /// </summary>
     public LoanService(FileRepository repo) => _repo = repo;
 
-    // სესხის მოთხოვნის გაგზავნა - ერთი მომლოდინე მოთხოვნა დაშვებულია
+    /// <summary>
+    /// Submits a new loan request for the user.
+    /// Returns false if the user already has a pending request.
+    /// </summary>
     public bool RequestLoan(string username, decimal amount)
     {
         var loans = _repo.LoadLoans();
@@ -20,15 +28,22 @@ public class LoanService
         return true;
     }
 
-    // ყველა მომლოდინე სესხის მოთხოვნა
+    /// <summary>
+    /// Returns all loan requests currently in Pending status.
+    /// </summary>
     public LoanRequest[] GetPending() =>
         [.. _repo.LoadLoans().Where(l => l.Status == "Pending")];
 
-    // კონკრეტული მომხმარებლის სესხის მოთხოვნები
+    /// <summary>
+    /// Returns all loan requests belonging to the specified user.
+    /// </summary>
     public LoanRequest[] GetUserLoans(string username) =>
         [.. _repo.LoadLoans().Where(l => l.Username == username)];
 
-    // სესხის დამტკიცება - თანხის ჩარიცხვა მომხმარებლის ანგარიშზე
+    /// <summary>
+    /// Approves a pending loan, credits the amount to the user's balance, and logs the transaction.
+    /// Returns false if the loan or user is not found.
+    /// </summary>
     public bool Approve(string username, decimal amount, BankingService bank, User adminUser)
     {
         var loans = _repo.LoadLoans();
@@ -39,7 +54,6 @@ public class LoanService
         var target = users.FirstOrDefault(u => u.Username == username);
         if (target == null) return false;
 
-        // თანხის დამატება და ლოგირება
         target.Balance += amount;
         _repo.SaveUsers(users);
         _repo.LogTransaction(new Transaction { Username = username, Type = "Loan", Amount = amount });
@@ -49,7 +63,10 @@ public class LoanService
         return true;
     }
 
-    // სესხის უარყოფა
+    /// <summary>
+    /// Rejects a pending loan request by updating its status to Rejected.
+    /// Returns false if the loan is not found.
+    /// </summary>
     public bool Reject(string username, decimal amount)
     {
         var loans = _repo.LoadLoans();

@@ -4,18 +4,18 @@ using JZJ_ATM.Models;
 using JZJ_ATM.Services;
 using JZJ_ATM.UI;
 
-// UTF-8 - ქართული სიმბოლოებისთვის
+// Enable UTF-8 encoding for Georgian character support
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 Console.InputEncoding = System.Text.Encoding.UTF8;
 
-// სერვისების ინიციალიზაცია
+// Initialize all services
 var repo = new FileRepository();
 var auth = new AuthService(repo);
 var bank = new BankingService(repo);
 var adminSvc = new AdminService(repo);
 var loanSvc = new LoanService(repo);
 
-// პირველი გაშვებისას ადმინის შექმნა
+// Create a default admin account on first run if no users exist
 var users = repo.LoadUsers();
 if (users.Count == 0)
 {
@@ -26,14 +26,16 @@ if (users.Count == 0)
     repo.SaveUsers(users);
 }
 
-// მთავარი ციკლი
+// Main application loop — route to Admin or Client menu based on role
 while (true)
 {
     var user = new MainMenu(auth).Run();
     if (user == null) break;
 
-    if (user.Role == Role.Admin) new AdminMenu(user, adminSvc, loanSvc, bank).Run();
-    else new ClientMenu(user, bank, repo, loanSvc).Run();
+    if (user.Role == Role.Admin)
+        new AdminMenu(user, adminSvc, loanSvc, bank).Run();
+    else
+        new ClientMenu(user, bank, repo, loanSvc).Run();
 }
 
 Console.Clear();

@@ -1,17 +1,27 @@
 ﻿namespace JZJ_ATM.Models;
 
-// სესხის მოთხოვნის მოდელი
+/// <summary>
+/// Represents a loan request submitted by a user.
+/// </summary>
 public class LoanRequest
 {
-    // სესხის მონაცემები
+    /// <summary>Gets or sets the username of the loan applicant.</summary>
     public string Username { get; set; } = "";
-    public decimal Amount { get; set; }
-    public string Status { get; set; } = "Pending"; // Pending / Approved / Rejected
 
-    // სესხის ფაილში ჩაწერა
+    /// <summary>Gets or sets the requested loan amount in GEL.</summary>
+    public decimal Amount { get; set; }
+
+    /// <summary>Gets or sets the current status: Pending, Approved, or Rejected.</summary>
+    public string Status { get; set; } = "Pending";
+
+    /// <summary>
+    /// Serializes the loan request into a pipe-delimited string for file storage.
+    /// </summary>
     public string Serialize() => $"{Username}|{Amount}|{Status}";
 
-    // ფაილიდან სესხის წაკითხვა
+    /// <summary>
+    /// Deserializes a pipe-delimited string from file into a LoanRequest object.
+    /// </summary>
     public static LoanRequest Deserialize(string line)
     {
         var p = line.Split('|');
