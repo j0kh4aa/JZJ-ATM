@@ -19,26 +19,4 @@ public class User
 
     /// <summary>Gets or sets whether the account has been approved by an admin.</summary>
     public bool Approved { get; set; } = false;
-
-    /// <summary>
-    /// Serializes the user into a pipe-delimited string for file storage.
-    /// </summary>
-    public string Serialize() =>
-        $"{Username}|{Password}|{Balance}|{Role}|{Approved}";
-
-    /// <summary>
-    /// Deserializes a pipe-delimited string from file into a User object.
-    /// </summary>
-    public static User Deserialize(string line)
-    {
-        var p = line.Split('|');
-        return new User
-        {
-            Username = p[0],
-            Password = p[1],
-            Balance = decimal.Parse(p[2]),
-            Role = Enum.Parse<Role>(p[3]),
-            Approved = bool.Parse(p[4])
-        };
-    }
 }
